@@ -11,16 +11,11 @@
 class WCKLib
 {
   public:
-    WCKLib(int ports[4]);
-    int positionMove(int id, int torq, int pos, int port);
+    WCKLib();
+    int positionMove(int id, int torq, int pos, HardwareSerial serial);
     void synchronizedPositionMove();
     int statusRead(int id, int port);
     int pasiveWck(int id, int port);
-  private:
-    bool _port0;
-    bool _port1;
-    bool _port2;
-    bool _port3;
 };
 
 #endif
