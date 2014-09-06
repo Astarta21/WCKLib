@@ -13,9 +13,9 @@ class WCKLib
   public:
     WCKLib();
     int positionMove(int id, int torq, int pos, HardwareSerial serial);
-    void synchronizedPositionMove();
-    int statusRead(int id, int port);
-    int pasiveWck(int id, int port);
+    void synchronizedPositionMove(int lastId, int torq, int pos[], HardwareSerial serial);
+    int statusRead(int id, int port, HardwareSerial serial);
+    int pasiveWck(int id, int port, HardwareSerial serial);
 };
 
 #endif

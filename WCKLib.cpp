@@ -40,50 +40,60 @@ int WCKLib::positionMove(int id, int torq, int pos, HardwareSerial serial){
 
 }
 
-void WCKLib::synchronizedPositionMove(){
-  //to do
+void WCKLib::synchronizedPositionMove(int lastId, int torq, int pos[], HardwareSerial serial){
+    int tmp1 = (torq << 5) | 31;
+    int tmp2 = lastId + 1; 
+    int posis = pos[0];
+    for(int i = 1; i < lastId; i = i + 1) posis = posis ^ pos[i];
+    int checksum = posis & 0x7f;
+
+    serial.write(0xff); // Header
+    serial.write(tmp1); // Data1: Torq : 0(Max)~4(Min), 31
+    serial.write(tmp2); // Data2: arbitrary value, last ID
+    for(int i = 0; i < lastId; i = i + 1) serial.write(pos[i]); // IDx target
+    serial.write(checksum); //Checsum: (ID0 XOR ID1... XOR LastID + 3) AND 0x7F
 }
 
-int WCKLib::statusRead(int id, int port){
+int WCKLib::statusRead(int id, int port, HardwareSerial serial){
   int pos = 0;
   
-  int tmp1 = 5 | id;
+  int tmp1 = (5<<5) | id;
   int tmp2 = 0x00;
   int checksum = (tmp1 ^ tmp2) & 0x7f; 
-  Serial.write(0xff); // Header
-  Serial.write(tmp1); // Data1: Mode:5,ID:0~30
-  Serial.write(tmp2); // Arbitrary value
-  Serial.write(checksum); //Checsum: (Data1 X OR Target position) AND 0x7F 
+  serial.write(0xff); // Header
+  serial.write(tmp1); // Data1: Mode:5,ID:0~30
+  serial.write(tmp2); // Arbitrary value
+  serial.write(checksum); //Checsum: (Data1 X OR Target position) AND 0x7F 
   // first byte: Load
-  if (Serial.available() > 0) {
+  if (serial.available() > 0) {
     // read the incoming byte:
-    int load = Serial.read();
+    int load = serial.read();
   }
   // second byte: position
-  if (Serial.available() > 0) {
+  if (serial.available() > 0) {
     // read the incoming byte:
-    pos = Serial.read();
+    pos = serial.read();
   }
   return pos;
 }  
 
-int WCKLib::pasiveWck(int id, int port){
+int WCKLib::pasiveWck(int id, int port, HardwareSerial serial){
   int pos = 0;
   
   int tmp1 = 6 | id;
   int tmp2 = 0x10;
   int checksum = (tmp1 ^ tmp2) & 0x7f; 
-  Serial.write(0xff); // Header
-  Serial.write(tmp1); // Data1: Mode:5,ID:0~30
-  Serial.write(tmp2); // Arbitrary value
-  Serial.write(checksum); //Checsum: (Data1 X OR Target position) AND 0x7F 
+  serial.write(0xff); // Header
+  serial.write(tmp1); // Data1: Mode:5,ID:0~30
+  serial.write(tmp2); // Arbitrary value
+  serial.write(checksum); //Checsum: (Data1 X OR Target position) AND 0x7F 
   // first byte: Load
-  if (Serial.available() > 0) {
+  if (serial.available() > 0) {
     // read the incoming byte:
     int load = Serial.read();
   }
   // second byte: position
-  if (Serial.available() > 0) {
+  if (serial.available() > 0) {
     // read the incoming byte:
     pos = Serial.read();
   }
