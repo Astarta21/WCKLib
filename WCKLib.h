@@ -16,6 +16,15 @@ class WCKLib
     void synchronizedPositionMove(int lastId, int torq, int pos[], HardwareSerial serial);
     int statusRead(int id, int port, HardwareSerial serial);
     int pasiveWck(int id, int port, HardwareSerial serial);
+    int wheelRotation(int id, int direction, int speed, HardwareSerial serial);
+    int breakWck(HardwareSerial serial);
+    int baudrateSet(int id, int baudrate, HardwareSerial serial);
+    int pdGainSet(int id, int pGain, int dGain, HardwareSerial serial);
+    int pdGainRead(int id, HardwareSerial serial);
+    int iGainSet(int id, int iGain, HardwareSerial serial);
+    int iGainReadI(int id, HardwareSerial serial);
+    int runtimePdGainSet(int id, int pGain, int dGain, HardwareSerial serial);
+    int runtimeIGainSet(int id, int iGain, HardwareSerial serial);
 };
 
 #endif
