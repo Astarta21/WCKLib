@@ -25,6 +25,10 @@ class WCKLib
     int iGainReadI(int id, HardwareSerial serial);
     int runtimePdGainSet(int id, int pGain, int dGain, HardwareSerial serial);
     int runtimeIGainSet(int id, int iGain, HardwareSerial serial);
+    int idSet(int id, int newId, HardwareSerial serial);
+    int speedSet(int id, int speed, int acceleration, HardwareSerial serial);
+    int speedRead(int id, HardwareSerial serial);
+    int runtimeSpeedSet(int id, int speed, int acceleration, HardwareSerial serial);
 };
 
 #endif

@@ -335,3 +335,107 @@ int WCKLib::runtimeIGainSet(int id, int iGain, HardwareSerial serial){
   return i;
 }
 
+int WCKLib::idSet(int id, int newId, HardwareSerial serial){
+  int i = 0;
+  int tmp1 = (7 << 5) | id;
+  int tmp2 = 0x0C;
+  int tmp3 = newId;
+  int tmp4 = tmp3;
+  int checksum = (tmp1 ^ tmp2 ^ tmp3 ^ tmp4) & 0x7f; 
+  serial.write(0xff); // Header
+  serial.write(tmp1); // Data1: Mode:7,ID:31
+  serial.write(tmp2); // Data2: 0x0C
+  serial.write(tmp3); // Data3: new id(0-254)
+  serial.write(tmp4); // Data4: Data3
+  serial.write(checksum); //Checsum: (Data1 X OR Data2 OR Data3 X OR Data4) AND 0x7F 
+  // first byte: Load
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    int p = Serial.read();
+  }
+  // second byte: position
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    i = Serial.read();
+  }  
+  return i;
+}
+
+int WCKLib::speedSet(int id, int speed, int acceleration, HardwareSerial serial){
+  int rspeed = 0;
+  int tmp1 = (7 << 5) | id;
+  int tmp2 = 0x0D;
+  int tmp3 = speed;
+  int tmp4 = acceleration;
+  int checksum = (tmp1 ^ tmp2 ^ tmp3 ^ tmp4) & 0x7f; 
+  serial.write(0xff); // Header
+  serial.write(tmp1); // Data1: Mode:7,ID:31
+  serial.write(tmp2); // Data2: 0x0D
+  serial.write(tmp3); // Data3: Speed(0-30)
+  serial.write(tmp4); // Data4: Accel(20~100), Accel = acceleration range
+  serial.write(checksum); //Checsum: (Data1 X OR Data2 OR Data3 X OR Data4) AND 0x7F 
+  // first byte: Load
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    rspeed = Serial.read();
+  }
+  // second byte: position
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    int acc = Serial.read();
+  }  
+  return rspeed;
+}
+
+int WCKLib::speedRead(int id, HardwareSerial serial){
+  int rspeed = 0;
+  int tmp1 = (7 << 5) | id;
+  int tmp2 = 0x0E;
+  int tmp3 = 0x00;
+  int tmp4 = tmp3;
+  int checksum = (tmp1 ^ tmp2 ^ tmp3 ^ tmp4) & 0x7f; 
+  serial.write(0xff); // Header
+  serial.write(tmp1); // Data1: Mode:7,ID:31
+  serial.write(tmp2); // Data2: 0x0E
+  serial.write(tmp3); // Data3: arbitrary value
+  serial.write(tmp4); // Data4: =Data3
+  serial.write(checksum); //Checsum: (Data1 X OR Data2 OR Data3 X OR Data4) AND 0x7F 
+  // first byte: Load
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    rspeed = Serial.read();
+  }
+  // second byte: position
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    int acc = Serial.read();
+  }
+  
+  return rspeed;
+}
+
+int WCKLib::runtimeSpeedSet(int id, int speed, int acceleration, HardwareSerial serial){
+  int rspeed = 0;
+  int tmp1 = (7 << 5) | id;
+  int tmp2 = 0x17;
+  int tmp3 = speed;
+  int tmp4 = acceleration;
+  int checksum = (tmp1 ^ tmp2 ^ tmp3 ^ tmp4) & 0x7f; 
+  serial.write(0xff); // Header
+  serial.write(tmp1); // Data1: Mode:7,ID:31
+  serial.write(tmp2); // Data2: 0x17
+  serial.write(tmp3); // Data3: Speed(0-30)
+  serial.write(tmp4); // Data4: Accel(20~100)
+  serial.write(checksum); //Checsum: (Data1 X OR Data2 OR Data3 X OR Data4) AND 0x7F 
+  // first byte: Load
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    rspeed = Serial.read();
+  }
+  // second byte: position
+  if (serial.available() > 0) {
+    // read the incoming byte:
+    int accel = Serial.read();
+  }  
+  return rspeed;
+}
